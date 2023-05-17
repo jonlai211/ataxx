@@ -34,6 +34,7 @@ public class Main {
         if (args.contains("--display")) {
             GUI display = new GUI("Ataxx");
             game = new Game(display, display, display);
+            display.refresh(game);
             display.pack();
             display.setVisible(true);
         } else {
@@ -57,6 +58,5 @@ public class Main {
             game = new Game(new TextSource(inReaders),
                             (b) -> { }, new TextReporter());
         }
-//        System.exit(game.play());
     }
 }

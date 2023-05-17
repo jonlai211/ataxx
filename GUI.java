@@ -4,10 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 
 class GUI implements View, CommandSource, Reporter {
+    private Game game;
     private JFrame frame;
+    private Consumer<Void> playConsumer;
     private JButton[][] buttons;
+    private JButton lastClickedButton = null;
+    private JButton[][] lastClickedSurroundingButtons = new JButton[3][3];
+    private Point lastClickedButtonPoint = null;
+    private Point[][] lastClickedSurroundingPoints = new Point[3][3];
 
     GUI(String ataxx) {
         frame = new JFrame(ataxx);
@@ -27,6 +34,11 @@ class GUI implements View, CommandSource, Reporter {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
                 buttons[i][j] = new JButton();
+                if (i == 0 && j == 0 || i == 6 && j == 6) {
+                    buttons[i][j].setBackground(Color.RED);
+                } else if (i == 0 && j == 6 || i == 6 && j == 0) {
+                    buttons[i][j].setBackground(Color.BLUE);
+                }
                 boardPanel.add(buttons[i][j]);
             }
         }
@@ -49,6 +61,15 @@ class GUI implements View, CommandSource, Reporter {
         label2.setForeground(Color.BLUE);
         label2.setPreferredSize(new Dimension(50, 30));
         bottomPanel.add(label1);
+        JButton startButton = new JButton("Play");
+        startButton.setBackground(Color.GREEN);
+        startButton.setPreferredSize(new Dimension(100, 30));
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startGame();
+            }
+        });
         label1.setBounds(10, 15, label1.getPreferredSize().width, label1.getPreferredSize().height);
         bottomPanel.add(comboBox);
         comboBox.setBounds(50, 15, comboBox.getPreferredSize().width, comboBox.getPreferredSize().height);
@@ -56,6 +77,8 @@ class GUI implements View, CommandSource, Reporter {
         label2.setBounds(200, 15, label2.getPreferredSize().width, label2.getPreferredSize().height);
         bottomPanel.add(comboBox2);
         comboBox2.setBounds(240, 15, comboBox2.getPreferredSize().width, comboBox2.getPreferredSize().height);
+        bottomPanel.add(startButton);
+        startButton.setBounds(680, 15, startButton.getPreferredSize().width, startButton.getPreferredSize().height);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setSize(800, 1000);
@@ -68,14 +91,111 @@ class GUI implements View, CommandSource, Reporter {
     }
 
     // Add some codes here
+    public void refresh(Game game){
+        char r = '1';
+        char c = 'a';
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7 ; j++) {
+                switch (j) {
+                    case 0 -> c = 'a';
+                    case 1 -> c = 'b';
+                    case 2 -> c = 'c';
+                    case 3 -> c = 'd';
+                    case 4 -> c = 'e';
+                    case 5 -> c = 'f';
+                    case 6 -> c = 'g';
+                }
+                switch (i) {
+                    case 0 -> r = '1';
+                    case 1 -> r = '2';
+                    case 2 -> r = '3';
+                    case 3 -> r = '4';
+                    case 4 -> r = '5';
+                    case 5 -> r = '6';
+                    case 6 -> r = '7';
+                }
+                PieceState state = game.getAtaxxBoard().getContent(c, r);
+                buttons[i][j].addActionListener(handleButtonClick(i, j, game));
+                if (state == PieceState.RED) {
+                    buttons[i][j].setBackground(Color.RED);
+                } else if (state == PieceState.BLUE) {
+                    buttons[i][j].setBackground(Color.BLUE);
+                } else if (state == PieceState.BLOCKED) {
+                    buttons[i][j].setBackground(Color.BLACK);
+                } else {
+                    buttons[i][j].setBackground(Color.WHITE);
+                }
+            }
+        }
+    }
 
+    private ActionListener handleButtonClick(int i, int j, Game game) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                if (lastClickedButtonPoint != null) {
+//                    PieceState state = game.getAtaxxBoard().getContent(toColumn(lastClickedButtonPoint.y), toRow(lastClickedButtonPoint.x));
+//                    buttons[lastClickedButtonPoint.x][lastClickedButtonPoint.y].setBackground(getColor(state));
+//                    for (int x = -1; x <= 1; x++) {
+//                        for (int y = -1; y <= 1; y++) {
+//                            if (lastClickedSurroundingPoints[x+1][y+1] != null) {
+//                                Point p = lastClickedSurroundingPoints[x+1][y+1];
+//                                state = game.getAtaxxBoard().getContent(toColumn(p.y), toRow(p.x));
+//                                buttons[p.x][p.y].setBackground(getColor(state));
+//                                lastClickedSurroundingPoints[x+1][y+1] = null;
+//                            }
+//                        }
+//                    }
+//                }
 
+                JButton button = buttons[i][j];
+                button.setBackground(Color.GREEN);
+                lastClickedButton = button;
 
+//                for (int x = -1; x <= 1; x++) {
+//                    for (int y = -1; y <= 1; y++) {
+//                        if (i+x >= 0 && i+x < 7 && j+y >= 0 && j+y < 7) {
+//                            buttons[i+x][j+y].setBackground(Color.YELLOW);
+//                            lastClickedSurroundingButtons[x+1][y+1] = buttons[i+x][j+y];
+//                        }
+//                    }
+//                }
+            }
+        };
+    }
 
+    private Color getColor(PieceState state) {
+        if (state == PieceState.RED) {
+            return Color.RED;
+        } else if (state == PieceState.BLUE) {
+            return Color.BLUE;
+        } else if (state == PieceState.BLOCKED) {
+            return Color.BLACK;
+        } else {
+            return Color.WHITE;
+        }
+    }
 
+    private char toRow(int i) {
+        return (char)('1' + i);
+    }
+
+    private char toColumn(int j) {
+        return (char)('a' + j);
+    }
+
+    public void startGame() {
+        if (game == null) {
+            game = new Game(this, this, this);
+            refresh(game);
+            pack();
+            setVisible(true);
+            System.exit(game.play());
+        }
+    }
 
     // These methods could be modified
-	
+
     @Override
     public void update(Board board) {
 
@@ -83,35 +203,34 @@ class GUI implements View, CommandSource, Reporter {
 
     @Override
     public String getCommand(String prompt) {
-        return null;
+        return JOptionPane.showInputDialog(frame, prompt);
     }
 
     @Override
     public void announceWinner(PieceState state) {
-
+        JOptionPane.showMessageDialog(frame, "The winner is: " + state);
     }
 
     @Override
     public void announceMove(Move move, PieceState player) {
-
+        System.out.println("Player " + player + " made move: " + move);
     }
 
     @Override
     public void message(String format, Object... args) {
-
+        JOptionPane.showMessageDialog(frame, String.format(format, args));
     }
 
     @Override
     public void error(String format, Object... args) {
-
+        JOptionPane.showMessageDialog(frame, "Error: " + String.format(format, args), "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public void setVisible(boolean b) {
-		
+        frame.setVisible(b);
     }
 
     public void pack() {
-		
     }
-	
+
 }
