@@ -46,14 +46,14 @@ class GUI implements View, CommandSource, Reporter {
         String[] options = {"AI", "Manual"};
         JComboBox<String> comboBox = new JComboBox<>(options);
         comboBox.setPreferredSize(new Dimension(100, 30));
-        String[] options2 = {"AI", "Manual"};
+        String[] options2 = {"Manual"};
         JComboBox<String> comboBox2 = new JComboBox<>(options2);
         comboBox2.setPreferredSize(new Dimension(100, 30));
-        JLabel label1 = new JLabel("Red: ");
-        label1.setForeground(Color.RED);
+        JLabel label1 = new JLabel("BLUE: ");
+        label1.setForeground(Color.BLUE);
         label1.setPreferredSize(new Dimension(50, 30));
-        JLabel label2 = new JLabel("Blue: ");
-        label2.setForeground(Color.BLUE);
+        JLabel label2 = new JLabel("Red: ");
+        label2.setForeground(Color.RED);
         label2.setPreferredSize(new Dimension(50, 30));
         bottomPanel.add(label1);
         JButton startButton = new JButton("Play");
@@ -62,7 +62,7 @@ class GUI implements View, CommandSource, Reporter {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                startGame();
+                startGame();
             }
         });
         label1.setBounds(10, 15, label1.getPreferredSize().width, label1.getPreferredSize().height);
