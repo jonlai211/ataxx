@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import java.util.function.Consumer;
 
 class GUI implements View, CommandSource, Reporter {
@@ -11,7 +12,7 @@ class GUI implements View, CommandSource, Reporter {
     private Board board;
     private JFrame frame;
     private Consumer<Void> playConsumer;
-    private JButton[][] buttons;
+    private JButton[][] buttons = new JButton[7][7];
     private JButton lastClickedButton = null;
     private JButton[][] lastClickedSurroundingButtons = new JButton[3][3];
     private Point lastClickedButtonPoint = null;
@@ -31,8 +32,12 @@ class GUI implements View, CommandSource, Reporter {
         frame.add(topPanel, BorderLayout.NORTH);
 
         // center panel
-        initBoard();
-
+//        for (int i = 0; i < 7; i++) {
+//            for (int j = 0; j < 7; j++) {
+//                buttons[i][j] = new JButton();
+//                buttons[i][j].setBackground(Color.WHITE);
+//            }
+//        }
 
         // bottom panel
         JPanel bottomPanel = new JPanel();
@@ -57,7 +62,7 @@ class GUI implements View, CommandSource, Reporter {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startGame();
+//                startGame();
             }
         });
         label1.setBounds(10, 15, label1.getPreferredSize().width, label1.getPreferredSize().height);
@@ -88,10 +93,10 @@ class GUI implements View, CommandSource, Reporter {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
                 buttons[i][j] = new JButton();
-                if (i == 0 && j == 0 || i == 6 && j == 6) {
-                    buttons[i][j].setBackground(Color.BLUE);
-                } else if (i == 0 && j == 6 || i == 6 && j == 0) {
+                if ((i == 0 && j == 0) || (i == 6 && j == 6)) {
                     buttons[i][j].setBackground(Color.RED);
+                } else if ((i == 0 && j == 6) || (i == 6 && j == 0)) {
+                    buttons[i][j].setBackground(Color.BLUE);
                 }
                 boardPanel.add(buttons[i][j]);
             }
@@ -165,14 +170,16 @@ class GUI implements View, CommandSource, Reporter {
 
     @Override
     public void update(Board board) {
-        board = new Board();
-        buttons = new JButton[Board.ONESIDE][Board.ONESIDE];
+        System.out.println("A");
+        JPanel boardPanel = new JPanel(new GridLayout(7, 7));
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-                char r = (char) ('1' + i);
+
+                char r = (char) ('1' + Math.abs(6 - i));
                 char c = (char) ('a' + j);
                 PieceState state = board.getContent(c, r);
                 buttons[i][j] = new JButton();
+
                 if (state == PieceState.RED) {
                     buttons[i][j].setBackground(Color.RED);
                 } else if (state == PieceState.BLUE) {
@@ -180,8 +187,12 @@ class GUI implements View, CommandSource, Reporter {
                 } else if (state == PieceState.BLOCKED) {
                     buttons[i][j].setBackground(Color.BLACK);
                 }
+                boardPanel.add(buttons[i][j]);
             }
         }
+
+        frame.add(boardPanel);
+        frame.validate();
     }
 
     @Override
