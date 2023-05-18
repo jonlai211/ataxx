@@ -48,16 +48,21 @@ class AIPlayer extends Player {
         // in order to meet with the requirements of Part A.2.
         // You can create add your own method and put your method here.
 		
-        ArrayList<Move> listOfMoves = possibleMoves(b, b.nextMove());
-        int moveArrayLength = listOfMoves.size();
-        int randomIndex = (int) (Math.random() * moveArrayLength);
-        for(int i = 0; i < moveArrayLength; i++){
-            if (i == randomIndex){
-                b.createMove(listOfMoves.get(i));
-                lastFoundMove = listOfMoves.get(i);
-            }
-        }
+//        ArrayList<Move> listOfMoves = possibleMoves(b, b.nextMove());
+//        int moveArrayLength = listOfMoves.size();
+//        int randomIndex = (int) (Math.random() * moveArrayLength);
+//        for(int i = 0; i < moveArrayLength; i++){
+//            if (i == randomIndex){
+//                b.createMove(listOfMoves.get(i));
+//                lastFoundMove = listOfMoves.get(i);
+//            }
+//        }
 
+        if (b.nextMove() == PieceState.RED) {
+            findMove(b, MAX_DEPTH, true, 1, -INFTY, INFTY);
+        } else {
+            findMove(b, MAX_DEPTH, true, -1, -INFTY, INFTY);
+        }
 
 
         // Please do not change the codes below
