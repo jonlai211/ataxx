@@ -241,6 +241,9 @@ class Board {
         }
         char col = (char) ('g' - (c - 'a'));
         char row = (char) ('7' - (r - '1'));
+
+        // Complete the code
+        // Hints: Consider using the method setContent and the variable unblockedNum
         PieceState v = BLOCKED;
 
         if(getContent(col, row) == EMPTY){
@@ -259,8 +262,6 @@ class Board {
             setContent(c, r, v);
             unblockedNum--;
         }
-        // Complete the code
-        // Hints: Consider using the method setContent and the variable unblockedNum
 
         // Please do not change the following codes
         if (!couldMove(RED) && !couldMove(BLUE)) {
@@ -357,7 +358,7 @@ class Board {
         // Hints: Consider using couldMove, getColorNums, getConsecJumpNums
         int PointRed = getColorNums(RED);
         int PointBlue = getColorNums(BLUE);
-		if((PointRed == 0 || PointBlue == 0) || (!couldMove(RED) && !couldMove(BLUE)) || (getConsecJumpNums() == 25)) {
+		if((PointRed == 0 || PointBlue == 0) || (!couldMove(RED) && !couldMove(BLUE)) || (getConsecJumpNums() >= 25)) {
             if (PointRed > PointBlue) winner = RED;
             else if (PointRed < PointBlue) winner = BLUE;
             else winner = EMPTY;
@@ -422,7 +423,7 @@ class Board {
         int num = 0;
 		for(char c = 'a'; c <= 'g'; c++){
             for(char r = '1'; r <= '7'; r++){
-                if(getContent(c,r).equals(color))num++;
+                if(getContent(c,r).equals(color)) num++;
             }
         }
         return num;

@@ -7,6 +7,14 @@ import java.util.ArrayList;
 /** A Player that computes its own moves. */
 class AIPlayer extends Player {
 
+    /** Maximum minimax \\search depth before going to static evaluation. */
+    private static final int MAX_DEPTH = 5;
+    /** A positsion magnitude indicating a win (for red if positive, blue
+     *  if negative). */
+    private static final int WINNING_VALUE = Integer.MAX_VALUE - 1;
+    /** A magnitude greater than a normal value. */
+    private static final int INFTY = Integer.MAX_VALUE;
+
     
     /** A new AIPlayer for GAME that will play MYCOLOR.
      *  SEED is used to initialize a random-number generator,
@@ -40,8 +48,7 @@ class AIPlayer extends Player {
         // in order to meet with the requirements of Part A.2.
         // You can create add your own method and put your method here.
 		
-        ArrayList<Move> listOfMoves =
-                possibleMoves(b, b.nextMove());
+        ArrayList<Move> listOfMoves = possibleMoves(b, b.nextMove());
         int moveArrayLength = listOfMoves.size();
         int randomIndex = (int) (Math.random() * moveArrayLength);
         for(int i = 0; i < moveArrayLength; i++){
@@ -50,7 +57,7 @@ class AIPlayer extends Player {
                 lastFoundMove = listOfMoves.get(i);
             }
         }
-		
+
 
 
         // Please do not change the codes below
@@ -58,6 +65,49 @@ class AIPlayer extends Player {
             lastFoundMove = Move.pass();
         }
         return lastFoundMove;
+    }
+
+    private int findMove(Board board, int depth, boolean saveMove, int sense, int alpha, int beta) {
+        int value = 0;
+        int currPlayer = board.getColorNums(board.nextMove());
+        int oppPlayer = board.getColorNums(board.nextMove().opposite());
+        PieceState winner = board.getWinner();
+        if (winner == board.nextMove()) {
+            return WINNING_VALUE;
+        } else if (winner == board.nextMove().opposite()) {
+            return -WINNING_VALUE;
+        } else {
+            if (depth == 0) {
+                return currPlayer - oppPlayer;
+            } else if (sense == 1) {
+                value = -INFTY;
+                ArrayList<Move> listOfMoves = possibleMoves(board, board.nextMove());
+                for (Move move : listOfMoves) {
+                    Board copyBoard = new Board(board);
+                    copyBoard.createMove(move);
+                    int possible = findMove(copyBoard, depth - 1, false, -1, alpha, beta);
+                    if (saveMove && possible > value) lastFoundMove = move;
+                    value = Math.max(value, possible);
+                    alpha = Math.max(alpha, value);
+                    if (beta <= alpha) break;
+                    return value;
+                }
+            } else {
+                value = INFTY;
+                ArrayList<Move> listOfMoves = possibleMoves(board, board.nextMove());
+                for (Move move : listOfMoves) {
+                    Board copyBoard = new Board(board);
+                    copyBoard.createMove(move);
+                    int possible = findMove(copyBoard, depth - 1, false, 1, alpha, beta);
+                    if (saveMove && possible < value) lastFoundMove = move;
+                    value = Math.min(value, possible);
+                    beta = Math.min(beta, value);
+                    if (beta <= alpha) break;
+                    return value;
+                }
+            }
+            return 0;
+        }
     }
 
 
@@ -75,8 +125,7 @@ class AIPlayer extends Player {
             for (char col = 'a'; col <= 'g'; col++) {
                 int index = Board.index(col, row);
                 if (board.getContent(index) == myColor) {
-                    ArrayList<Move> addMoves
-                            = assistPossibleMoves(board, row, col);
+                    ArrayList<Move> addMoves = assistPossibleMoves(board, row, col);
                     possibleMoves.addAll(addMoves);
                 }
             }

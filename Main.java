@@ -18,8 +18,7 @@ public class Main {
      *  default.
      */
     public static void main(String[] args0) {
-        CommandArgs args =
-            new CommandArgs("--display{0,1}", args0);
+        CommandArgs args = new CommandArgs("--display{0,1}", args0);
 
         Game game;
         if (args.contains("--display")) {
@@ -45,8 +44,7 @@ public class Main {
                     }
                 }
             }
-            game = new Game(new TextSource(inReaders),
-                            (b) -> { }, new TextReporter());
+            game = new Game(new TextSource(inReaders), (b) -> { }, new TextReporter());
         }
         System.exit(game.play());
     }
