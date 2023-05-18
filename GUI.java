@@ -88,9 +88,9 @@ class GUI implements View, CommandSource, Reporter {
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
                 buttons[i][j] = new JButton();
-                if (i == 0 && j == 0 || i == 6 && j == 6) {
+                if ((i == 0 && j == 0 )|| (i == 6 && j == 6)) {
                     buttons[i][j].setBackground(Color.BLUE);
-                } else if (i == 0 && j == 6 || i == 6 && j == 0) {
+                } else if ((i == 0 && j == 6) || (i == 6 && j == 0)) {
                     buttons[i][j].setBackground(Color.RED);
                 }
                 boardPanel.add(buttons[i][j]);
