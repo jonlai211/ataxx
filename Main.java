@@ -58,5 +58,6 @@ public class Main {
             game = new Game(new TextSource(inReaders),
                             (b) -> { }, new TextReporter());
         }
+        System.exit(game.play());
     }
 }
