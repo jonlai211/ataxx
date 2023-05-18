@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 class GUI implements View, CommandSource, Reporter {
     private Game game;
+    private Board board;
     private JFrame frame;
     private Consumer<Void> playConsumer;
     private JButton[][] buttons;
@@ -17,6 +18,7 @@ class GUI implements View, CommandSource, Reporter {
     private Point[][] lastClickedSurroundingPoints = new Point[3][3];
 
     GUI(String ataxx) {
+        board = new Board();
         frame = new JFrame(ataxx);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -29,29 +31,17 @@ class GUI implements View, CommandSource, Reporter {
         frame.add(topPanel, BorderLayout.NORTH);
 
         // center panel
-        buttons = new JButton[7][7];
-        JPanel boardPanel = new JPanel(new GridLayout(7, 7));
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                buttons[i][j] = new JButton();
-                if (i == 0 && j == 0 || i == 6 && j == 6) {
-                    buttons[i][j].setBackground(Color.RED);
-                } else if (i == 0 && j == 6 || i == 6 && j == 0) {
-                    buttons[i][j].setBackground(Color.BLUE);
-                }
-                boardPanel.add(buttons[i][j]);
-            }
-        }
-        frame.add(boardPanel, BorderLayout.CENTER);
+        initBoard();
+
 
         // bottom panel
         JPanel bottomPanel = new JPanel();
         bottomPanel.setPreferredSize(new Dimension(800, 60));
         bottomPanel.setLayout(null);
-        String[] options = { "AI", "Manual"};
+        String[] options = {"AI", "Manual"};
         JComboBox<String> comboBox = new JComboBox<>(options);
         comboBox.setPreferredSize(new Dimension(100, 30));
-        String[] options2 = { "AI", "Manual"};
+        String[] options2 = {"AI", "Manual"};
         JComboBox<String> comboBox2 = new JComboBox<>(options2);
         comboBox2.setPreferredSize(new Dimension(100, 30));
         JLabel label1 = new JLabel("Red: ");
@@ -84,49 +74,29 @@ class GUI implements View, CommandSource, Reporter {
         frame.setSize(800, 1000);
         frame.setResizable(false);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int)screenSize.getWidth();
-        int height = (int)screenSize.getHeight();
-        frame.setLocation((width-frame.getWidth())/2, (height-frame.getHeight())/2);
+        int width = (int) screenSize.getWidth();
+        int height = (int) screenSize.getHeight();
+        frame.setLocation((width - frame.getWidth()) / 2, (height - frame.getHeight()) / 2);
         frame.setVisible(true);
     }
 
     // Add some codes here
-    public void refresh(Game game){
-        char r = '1';
-        char c = 'a';
+    public void initBoard() {
+        buttons = new JButton[7][7];
+        JPanel boardPanel = new JPanel(new GridLayout(7, 7));
+
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7 ; j++) {
-                switch (j) {
-                    case 0 -> c = 'a';
-                    case 1 -> c = 'b';
-                    case 2 -> c = 'c';
-                    case 3 -> c = 'd';
-                    case 4 -> c = 'e';
-                    case 5 -> c = 'f';
-                    case 6 -> c = 'g';
-                }
-                switch (i) {
-                    case 0 -> r = '1';
-                    case 1 -> r = '2';
-                    case 2 -> r = '3';
-                    case 3 -> r = '4';
-                    case 4 -> r = '5';
-                    case 5 -> r = '6';
-                    case 6 -> r = '7';
-                }
-                PieceState state = game.getAtaxxBoard().getContent(c, r);
-                buttons[i][j].addActionListener(handleButtonClick(i, j, game));
-                if (state == PieceState.RED) {
-                    buttons[i][j].setBackground(Color.RED);
-                } else if (state == PieceState.BLUE) {
+            for (int j = 0; j < 7; j++) {
+                buttons[i][j] = new JButton();
+                if (i == 0 && j == 0 || i == 6 && j == 6) {
                     buttons[i][j].setBackground(Color.BLUE);
-                } else if (state == PieceState.BLOCKED) {
-                    buttons[i][j].setBackground(Color.BLACK);
-                } else {
-                    buttons[i][j].setBackground(Color.WHITE);
+                } else if (i == 0 && j == 6 || i == 6 && j == 0) {
+                    buttons[i][j].setBackground(Color.RED);
                 }
+                boardPanel.add(buttons[i][j]);
             }
         }
+        frame.add(boardPanel, BorderLayout.CENTER);
     }
 
     private ActionListener handleButtonClick(int i, int j, Game game) {
@@ -177,19 +147,16 @@ class GUI implements View, CommandSource, Reporter {
     }
 
     private char toRow(int i) {
-        return (char)('1' + i);
+        return (char) ('1' + i);
     }
 
     private char toColumn(int j) {
-        return (char)('a' + j);
+        return (char) ('a' + j);
     }
 
     public void startGame() {
         if (game == null) {
             game = new Game(this, this, this);
-            refresh(game);
-            pack();
-            setVisible(true);
             System.exit(game.play());
         }
     }
@@ -198,7 +165,23 @@ class GUI implements View, CommandSource, Reporter {
 
     @Override
     public void update(Board board) {
-
+        board = new Board();
+        buttons = new JButton[Board.ONESIDE][Board.ONESIDE];
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 7; j++) {
+                char r = (char) ('1' + i);
+                char c = (char) ('a' + j);
+                PieceState state = board.getContent(c, r);
+                buttons[i][j] = new JButton();
+                if (state == PieceState.RED) {
+                    buttons[i][j].setBackground(Color.RED);
+                } else if (state == PieceState.BLUE) {
+                    buttons[i][j].setBackground(Color.BLUE);
+                } else if (state == PieceState.BLOCKED) {
+                    buttons[i][j].setBackground(Color.BLACK);
+                }
+            }
+        }
     }
 
     @Override

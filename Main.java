@@ -34,7 +34,7 @@ public class Main {
         if (args.contains("--display")) {
             GUI display = new GUI("Ataxx");
             game = new Game(display, display, display);
-            display.refresh(game);
+            display.update(game.getAtaxxBoard());
             display.pack();
             display.setVisible(true);
         } else {
