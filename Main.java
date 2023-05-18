@@ -21,15 +21,6 @@ public class Main {
         CommandArgs args =
             new CommandArgs("--display{0,1}", args0);
 
-//        // Always in display mode
-//        CommandArgs args = new CommandArgs("--display{0,1}", args0);
-//        if (!args.contains("--display")) {
-//            String[] newArgs = new String[args0.length + 1];
-//            System.arraycopy(args0, 0, newArgs, 0, args0.length);
-//            newArgs[args0.length] = "--display";
-//            args = new CommandArgs("--display{0,1}", newArgs);
-//        }
-
         Game game;
         if (args.contains("--display")) {
             GUI display = new GUI("Ataxx");

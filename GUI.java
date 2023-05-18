@@ -2,13 +2,9 @@ package ataxx;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
 import java.util.function.Consumer;
 
 class GUI implements View, CommandSource, Reporter {
-    private Game game;
     private Board board;
     private JFrame frame;
     private Consumer<Void> playConsumer;
@@ -32,12 +28,6 @@ class GUI implements View, CommandSource, Reporter {
         frame.add(topPanel, BorderLayout.NORTH);
 
         // center panel
-//        for (int i = 0; i < 7; i++) {
-//            for (int j = 0; j < 7; j++) {
-//                buttons[i][j] = new JButton();
-//                buttons[i][j].setBackground(Color.WHITE);
-//            }
-//        }
 
         // bottom panel
         JPanel bottomPanel = new JPanel();
@@ -56,16 +46,6 @@ class GUI implements View, CommandSource, Reporter {
         label2.setForeground(Color.RED);
         label2.setPreferredSize(new Dimension(50, 30));
         bottomPanel.add(label1);
-//        JButton startButton = new JButton("Play");
-//        startButton.setBackground(Color.GREEN);
-//        startButton.setPreferredSize(new Dimension(100, 30));
-//        startButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-////                startGame();
-//            }
-//        }
-//        );
         label1.setBounds(10, 15, label1.getPreferredSize().width, label1.getPreferredSize().height);
         bottomPanel.add(comboBox);
         comboBox.setBounds(50, 15, comboBox.getPreferredSize().width, comboBox.getPreferredSize().height);
@@ -73,8 +53,6 @@ class GUI implements View, CommandSource, Reporter {
         label2.setBounds(200, 15, label2.getPreferredSize().width, label2.getPreferredSize().height);
         bottomPanel.add(comboBox2);
         comboBox2.setBounds(240, 15, comboBox2.getPreferredSize().width, comboBox2.getPreferredSize().height);
-//        bottomPanel.add(startButton);
-//        startButton.setBounds(680, 15, startButton.getPreferredSize().width, startButton.getPreferredSize().height);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setSize(800, 1000);
@@ -87,91 +65,11 @@ class GUI implements View, CommandSource, Reporter {
     }
 
     // Add some codes here
-    public void initBoard() {
-        buttons = new JButton[7][7];
-        JPanel boardPanel = new JPanel(new GridLayout(7, 7));
-
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 7; j++) {
-                buttons[i][j] = new JButton();
-                if ((i == 0 && j == 0) || (i == 6 && j == 6)) {
-                    buttons[i][j].setBackground(Color.RED);
-                } else if ((i == 0 && j == 6) || (i == 6 && j == 0)) {
-                    buttons[i][j].setBackground(Color.BLUE);
-                }
-                boardPanel.add(buttons[i][j]);
-            }
-        }
-        frame.add(boardPanel, BorderLayout.CENTER);
-    }
-
-    private ActionListener handleButtonClick(int i, int j, Game game) {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                if (lastClickedButtonPoint != null) {
-//                    PieceState state = game.getAtaxxBoard().getContent(toColumn(lastClickedButtonPoint.y), toRow(lastClickedButtonPoint.x));
-//                    buttons[lastClickedButtonPoint.x][lastClickedButtonPoint.y].setBackground(getColor(state));
-//                    for (int x = -1; x <= 1; x++) {
-//                        for (int y = -1; y <= 1; y++) {
-//                            if (lastClickedSurroundingPoints[x+1][y+1] != null) {
-//                                Point p = lastClickedSurroundingPoints[x+1][y+1];
-//                                state = game.getAtaxxBoard().getContent(toColumn(p.y), toRow(p.x));
-//                                buttons[p.x][p.y].setBackground(getColor(state));
-//                                lastClickedSurroundingPoints[x+1][y+1] = null;
-//                            }
-//                        }
-//                    }
-//                }
-
-                JButton button = buttons[i][j];
-                button.setBackground(Color.GREEN);
-                lastClickedButton = button;
-
-//                for (int x = -1; x <= 1; x++) {
-//                    for (int y = -1; y <= 1; y++) {
-//                        if (i+x >= 0 && i+x < 7 && j+y >= 0 && j+y < 7) {
-//                            buttons[i+x][j+y].setBackground(Color.YELLOW);
-//                            lastClickedSurroundingButtons[x+1][y+1] = buttons[i+x][j+y];
-//                        }
-//                    }
-//                }
-            }
-        };
-    }
-
-    private Color getColor(PieceState state) {
-        if (state == PieceState.RED) {
-            return Color.RED;
-        } else if (state == PieceState.BLUE) {
-            return Color.BLUE;
-        } else if (state == PieceState.BLOCKED) {
-            return Color.BLACK;
-        } else {
-            return Color.WHITE;
-        }
-    }
-
-    private char toRow(int i) {
-        return (char) ('1' + i);
-    }
-
-    private char toColumn(int j) {
-        return (char) ('a' + j);
-    }
-
-    public void startGame() {
-        if (game == null) {
-            game = new Game(this, this, this);
-            System.exit(game.play());
-        }
-    }
 
     // These methods could be modified
 
     @Override
     public void update(Board board) {
-        System.out.println("A");
         JPanel boardPanel = new JPanel(new GridLayout(7, 7));
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
