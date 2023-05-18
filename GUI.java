@@ -56,15 +56,16 @@ class GUI implements View, CommandSource, Reporter {
         label2.setForeground(Color.RED);
         label2.setPreferredSize(new Dimension(50, 30));
         bottomPanel.add(label1);
-        JButton startButton = new JButton("Play");
-        startButton.setBackground(Color.GREEN);
-        startButton.setPreferredSize(new Dimension(100, 30));
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startGame();
-            }
-        });
+//        JButton startButton = new JButton("Play");
+//        startButton.setBackground(Color.GREEN);
+//        startButton.setPreferredSize(new Dimension(100, 30));
+//        startButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+////                startGame();
+//            }
+//        }
+//        );
         label1.setBounds(10, 15, label1.getPreferredSize().width, label1.getPreferredSize().height);
         bottomPanel.add(comboBox);
         comboBox.setBounds(50, 15, comboBox.getPreferredSize().width, comboBox.getPreferredSize().height);
@@ -72,8 +73,8 @@ class GUI implements View, CommandSource, Reporter {
         label2.setBounds(200, 15, label2.getPreferredSize().width, label2.getPreferredSize().height);
         bottomPanel.add(comboBox2);
         comboBox2.setBounds(240, 15, comboBox2.getPreferredSize().width, comboBox2.getPreferredSize().height);
-        bottomPanel.add(startButton);
-        startButton.setBounds(680, 15, startButton.getPreferredSize().width, startButton.getPreferredSize().height);
+//        bottomPanel.add(startButton);
+//        startButton.setBounds(680, 15, startButton.getPreferredSize().width, startButton.getPreferredSize().height);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setSize(800, 1000);
