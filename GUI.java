@@ -27,8 +27,6 @@ class GUI implements View, CommandSource, Reporter {
         topPanel.add(infoLabel);
         frame.add(topPanel, BorderLayout.NORTH);
 
-        // center panel
-
         // bottom panel
         JPanel bottomPanel = new JPanel();
         bottomPanel.setPreferredSize(new Dimension(800, 60));
@@ -64,30 +62,47 @@ class GUI implements View, CommandSource, Reporter {
         frame.setVisible(true);
     }
 
-    // Add some codes here
-
-    // These methods could be modified
-
     @Override
     public void update(Board board) {
+        // Ensure board is not null
+        if (board == null) {
+            throw new IllegalArgumentException("Board cannot be null.");
+        }
+
+        // Ensure that buttons array has been initialized
+        if (buttons == null) {
+            throw new IllegalStateException("Buttons array not initialized.");
+        }
+
         JPanel boardPanel = new JPanel(new GridLayout(7, 7));
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 7; j++) {
-
                 char r = (char) ('1' + Math.abs(6 - i));
                 char c = (char) ('a' + j);
                 PieceState state = board.getContent(c, r);
-                buttons[i][j] = new JButton();
 
+                // Ensure state is not null
+                if (state == null) {
+                    throw new IllegalStateException("Board has null state at position " + c + r + ".");
+                }
+
+                buttons[i][j] = new JButton();
                 if (state == PieceState.RED) {
                     buttons[i][j].setBackground(Color.RED);
                 } else if (state == PieceState.BLUE) {
                     buttons[i][j].setBackground(Color.BLUE);
                 } else if (state == PieceState.BLOCKED) {
                     buttons[i][j].setBackground(Color.BLACK);
+                } else {
+                    assert false : "Unexpected PieceState: " + state;
                 }
+
                 boardPanel.add(buttons[i][j]);
             }
+        }
+
+        if (frame == null) {
+            throw new IllegalStateException("Frame is not initialized.");
         }
 
         frame.add(boardPanel);

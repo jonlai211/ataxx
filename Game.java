@@ -135,6 +135,16 @@ class Game {
         reporter.message(ataxxBoard.toString(true));
     }
 
+    private void setAllAi() {
+        setAtaxxPlayer(BLUE, new AIPlayer(this, BLUE, seed));
+        setAtaxxPlayer(RED, new AIPlayer(this, RED, seed));
+        seed += 2;
+    }
+    private void setAllManual() {
+        setAtaxxPlayer(BLUE, new Manual(this, BLUE));
+        setAtaxxPlayer(RED, new Manual(this, RED));
+    }
+
     /** Execute command CMNDSTR.  Throws GameException on errors. */
     public void runCommand(String cmndStr) {
         Command cmnd = Command.parseCommand(cmndStr);
@@ -167,6 +177,12 @@ class Game {
                     break;
                 case BOARD_OFF:
                     board_on = false;
+                    break;
+                case ALLAI:
+                    setAllAi();
+                    break;
+                case ALLMANUAL:
+                    setAllManual();
                     break;
                 case QUIT:
                     exit = 0;

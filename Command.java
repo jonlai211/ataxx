@@ -29,8 +29,11 @@ class Command {
         SCORE,
         BOARD_ON,
         BOARD_OFF,
+        ALLAI,
+        ALLMANUAL,
         /** Syntax error in command. */
         ERROR(".*"),
+
         /** End of input stream. */
         EOF;
 
